@@ -63,3 +63,49 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+const galleryRef = document.querySelector('.js-gallery');
+console.log(galleryRef);
+
+// create patern string
+const createImageEl = (acc, { preview, original, description }) =>
+  acc +
+  `<li class="gallery_item">
+    <img class="gallery__image"   src="${preview}" 
+    data-source="${original}"
+    alt ="${description}">
+  </li>`;
+// create array  and call function
+const markUp = galleryItems.reduce(createImageEl, '');
+// console.log(markUp);
+galleryRef.insertAdjacentHTML('beforeend', markUp);
+//append array in html
+galleryRef.addEventListener('click', onOpenModalClick);
+
+const lightBoxOpen = document.querySelector('.js-lightbox');
+function onOpenModalClick(event) {
+  window.addEventListener('keydown', logMessage);
+  //console.dir(event.target);
+  //console.log(event.target.dataset.source);
+  lightBoxOpen.classList.add('is-open');
+  const lightBox = document.querySelector('.lightbox__image');
+  lightBox.src = event.target.dataset.source;
+  console.log(event);
+}
+const lightBoxClose = document.querySelector('.lightbox__overlay');
+lightBoxClose.addEventListener('click', onCloseModalClick);
+const lightBoxCloseBtn = document.querySelector('.lightbox__button');
+lightBoxCloseBtn.addEventListener('click', onCloseModalClick);
+
+function logMessage({ type, key, code }) {
+  //console.log(code);
+  if (code === 'Escape') {
+    onCloseModalClick();
+  }
+}
+function onCloseModalClick() {
+  window.removeEventListener('keydown', logMessage);
+  const lightBoxOpen = document.querySelector('.js-lightbox');
+  lightBoxOpen.classList.remove('is-open');
+  const lightBox = document.querySelector('.lightbox__image');
+  lightBox.src = '';
+}
